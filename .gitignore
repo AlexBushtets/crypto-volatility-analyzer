@@ -1,9 +1,27 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.log
-*.tmp
-.env
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.env/
+venv/
+
+# VSCode settings (если используешь VS Code)
+.vscode/
+
+# MacOS junk files
 .DS_Store
-*.sqlite
+
+# Windows junk files
+Thumbs.db
+desktop.ini
+
+# Log files
+*.log
+
+# CSV и результаты, которые можно пересоздать
 *.csv
+
+# Отчёты
+*.pdf
