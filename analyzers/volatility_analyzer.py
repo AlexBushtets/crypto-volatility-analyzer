@@ -24,7 +24,7 @@ def calculate_volatility(klines, symbol, days=5):
     df["open_time"] = pd.to_datetime(df["open_time"], unit='ms')
 
     # Убираем субботу и воскресенье
-    df = df[~df['open_time'].dt.dayofweek.isin([5, 6])]
+    # df = df[~df['open_time'].dt.dayofweek.isin([5, 6])]
 
     # Берём нужное количество последних будних дней
     last_n = df.tail(days)
@@ -85,7 +85,8 @@ def calculate_volatility(klines, symbol, days=5):
     return {
         "symbol": symbol,
         "average_volatility_points": avg_points,
-        "average_volatility_percent": avg_percent
+        "average_volatility_percent": avg_percent,
+        "daily_data": result_rows  # ← добавим подробную таблицу
     }
 
 

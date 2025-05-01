@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Результаты анализа</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <h2>Анализ волатильности за {{ days }} дней</h2>
+
+  <h3>Криптовалюты:</h3>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Монета</th>
+      <th>Средняя волатильность (пункты)</th>
+      <th>Средняя волатильность (%)</th>
+    </tr>
+    {% for row in crypto_results %}
+    <tr>
+      <td>{{ row.symbol }}</td>
+      <td>{{ row.average_volatility_points }}</td>
+      <td>{{ row.average_volatility_percent }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h3>📅 Ежедневные изменения</h3>
+{% for coin, table in zip(crypto_results, crypto_tables) %}
+  <h4>{{ coin.symbol }}</h4>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Дата</th>
+      <th>Пункты</th>
+      <th>Изменение (%)</th>
+    </tr>
+    {% for row in table %}
+    <tr>
+      <td>{{ row.date }}</td>
+      <td>{{ row.points }}</td>
+      <td>{{ row.percent_change }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>
+{% endfor %}
+
+<h4>S&P500</h4>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Дата</th>
+    <th>Пункты</th>
+    <th>Изменение (%)</th>
+  </tr>
+  {% for row in sp500_table %}
+  <tr>
+    <td>{{ row.date }}</td>
+    <td>{{ row.points }}</td>
+    <td>{{ row.percent_change }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+  <h3>S&P 500:</h3>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Индекс</th>
+      <th>Средняя волатильность (пункты)</th>
+      <th>Средняя волатильность (%)</th>
+    </tr>
+    <tr>
+      <td>{{ sp500_result.symbol }}</td>
+      <td>{{ sp500_result.average_volatility_points }}</td>
+      <td>{{ sp500_result.average_volatility_percent }}</td>
+    </tr>
+  </table>
+
+  <br>
+  <a href="{{ report_url }}" download>📥 Скачать PDF-отчёт</a><br><br>
+  <a href="/">🔙 Назад</a>
+
+  <h3>📈 График дневной волатильности</h3>
+  <div id="volatility-plot" style="width: 100%; height: 500px;"></div>
+
+  {% if plot_data %}
+  <script>
+    const plotData = {{ plot_data | safe }};
+    Plotly.newPlot('volatility-plot', plotData, {
+      title: 'График дневной волатильности',
+      xaxis: { title: 'Дата' },
+      yaxis: { title: 'Изменение (%)' }
+    });
+  </script>
+  {% else %}
+  <p style="color: red;">⚠️ График не может быть отображён — отсутствуют данные.</p>
+  {% endif %}
+</body>
+</html>
+

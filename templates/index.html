@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Анализ волатильности</title>
+</head>
+<body>
+  <h1>Анализ волатильности</h1>
+  <form action="/analyze" method="post">
+    <p>Выберите количество будних дней для анализа:</p>
+    <label><input type="radio" name="days" value="5" checked> 5 дней</label><br>
+    <label><input type="radio" name="days" value="10"> 10 дней</label><br>
+    <label><input type="radio" name="days" value="30"> 30 дней</label><br><br>
+    <button type="submit">Запустить анализ</button>
+  </form>
+</body>
+</html>
