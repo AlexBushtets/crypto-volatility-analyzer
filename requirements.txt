@@ -1,2 +1,7 @@
 requests
 pandas
+uvicorn
+fastapi
+matplotlib
+jinja2
+python-multipart
