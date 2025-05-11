@@ -1,7 +1,8 @@
-requests
-pandas
-uvicorn
 fastapi
+uvicorn
 matplotlib
+pandas
 jinja2
 python-multipart
+requests
+yfinance
