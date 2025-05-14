@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-def fetch_klines(symbol, interval="1d", limit=10):
+def fetch_klines(symbol, interval="1d", limit=100):
     """
     Получение исторических свечей с Binance
     """

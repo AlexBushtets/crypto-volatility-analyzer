@@ -26,7 +26,7 @@ def run_volatility_analysis(days_to_analyze):
 
     # --- Обработка индекса S&P500 ---
     print("\nОбрабатываем индекс S&P 500...")
-    sp500_df = fetch_sp500_data(period="90d", interval="1d")
+    sp500_df = fetch_sp500_data(period=f"{days_to_analyze}d", interval="1d")
     result_sp500 = None
 
     if sp500_df is not None:

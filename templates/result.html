@@ -74,10 +74,37 @@
   </div>
 
   <br>
-  <a href="{{ report_url }}" download>📥 Скачать PDF-отчёт</a><br><br>
-  <a href="/">🔙 Назад</a>
+  <style>
+    .btn-link {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px 10px 20px 0;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    .btn-download {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-download:hover {
+      background-color: #218838;
+    }
+    .btn-back {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-back:hover {
+      background-color: #0056b3;
+    }
+  </style>
 
-  <h3>📈 График дневной волатильности</h3>
+  <a href="{{ report_url }}" download class="btn-link btn-download">📥 Скачать PDF-отчёт</a>
+  <a href="/" class="btn-link btn-back">🔙 Назад</a>
+
+<!-- удалён заголовок <h3>График дневной волатильности</h3> -->
+
   <div id="volatility-plot" style="width: 100%; height: 500px;"></div>
 
   {% if plot_data %}
