@@ -9,13 +9,14 @@
 <body>
   <h2>Анализ волатильности за {{ days }} дней</h2>
 
-  <h3>Криптовалюты:</h3>
+  <h3>Сводная таблица волатильности</h3>
   <table border="1" cellpadding="5">
     <tr>
-      <th>Монета</th>
+      <th>Актив</th>
       <th>Средняя волатильность (пункты)</th>
       <th>Средняя волатильность (%)</th>
     </tr>
+
     {% for row in crypto_results %}
     <tr>
       <td>{{ row.symbol }}</td>
@@ -23,56 +24,54 @@
       <td>{{ row.average_volatility_percent }}</td>
     </tr>
     {% endfor %}
-  </table>
-  <h3>📅 Ежедневные изменения</h3>
-{% for coin, table in zip(crypto_results, crypto_tables) %}
-  <h4>{{ coin.symbol }}</h4>
-  <table border="1" cellpadding="5">
-    <tr>
-      <th>Дата</th>
-      <th>Пункты</th>
-      <th>Изменение (%)</th>
-    </tr>
-    {% for row in table %}
-    <tr>
-      <td>{{ row.date }}</td>
-      <td>{{ row.points }}</td>
-      <td>{{ row.percent_change }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  <br>
-{% endfor %}
 
-<h4>S&P500</h4>
-<table border="1" cellpadding="5">
-  <tr>
-    <th>Дата</th>
-    <th>Пункты</th>
-    <th>Изменение (%)</th>
-  </tr>
-  {% for row in sp500_table %}
-  <tr>
-    <td>{{ row.date }}</td>
-    <td>{{ row.points }}</td>
-    <td>{{ row.percent_change }}</td>
-  </tr>
-  {% endfor %}
-</table>
-
-  <h3>S&P 500:</h3>
-  <table border="1" cellpadding="5">
-    <tr>
-      <th>Индекс</th>
-      <th>Средняя волатильность (пункты)</th>
-      <th>Средняя волатильность (%)</th>
-    </tr>
     <tr>
       <td>{{ sp500_result.symbol }}</td>
       <td>{{ sp500_result.average_volatility_points }}</td>
       <td>{{ sp500_result.average_volatility_percent }}</td>
     </tr>
   </table>
+
+  <h3>📅 Ежедневные изменения</h3>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+    {% for coin, table in zip(crypto_results, crypto_tables) %}
+      <div style="flex: 1 1 300px; min-width: 300px;">
+        <h4>{{ coin.symbol }}</h4>
+        <table border="1" cellpadding="5">
+          <tr>
+            <th>Дата</th>
+            <th>Пункты</th>
+            <th>Изменение (%)</th>
+          </tr>
+          {% for row in table %}
+          <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.points }}</td>
+            <td>{{ row.percent_change }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    {% endfor %}
+
+    <div style="flex: 1 1 300px; min-width: 300px;">
+      <h4>S&P500</h4>
+      <table border="1" cellpadding="5">
+        <tr>
+          <th>Дата</th>
+          <th>Пункты</th>
+          <th>Изменение (%)</th>
+        </tr>
+        {% for row in sp500_table %}
+        <tr>
+          <td>{{ row.date }}</td>
+          <td>{{ row.points }}</td>
+          <td>{{ row.percent_change }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
 
   <br>
   <a href="{{ report_url }}" download>📥 Скачать PDF-отчёт</a><br><br>
