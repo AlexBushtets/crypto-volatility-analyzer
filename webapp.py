@@ -86,5 +86,11 @@ async def start_bot():
     for d in [5, 10, 30, 90]:
         application.add_handler(CommandHandler(f"analyze_{d}", make_analyze_handler(d)))
 
+    print("🤖 Telegram-бот запускается...")
+
+    await application.initialize()
+    await application.start()
+    asyncio.create_task(application.updater.start_polling())
+
     print("🤖 Telegram-бот запущен.")
-    asyncio.create_task(application.run_polling())
+
