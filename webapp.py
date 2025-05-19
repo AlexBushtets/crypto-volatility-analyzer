@@ -24,12 +24,38 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE, days: int):
     await update.message.reply_text(f"🔍 Анализирую волатильность за {days} дней...")
+
     crypto_results, sp500_result = run_volatility_analysis(days)
+
     response = f"📊 <b>Волатильность за {days} дней:</b>\n\n"
+
     for coin in crypto_results:
         response += f"<b>{coin['symbol']}</b> — {coin['average_volatility_points']:.1f} пунктов, {coin['average_volatility_percent']:.2f}%\n"
+
+        # Находим максимальную и минимальную волатильность
+        daily_data = coin.get("daily_data", [])
+        if daily_data:
+            max_row = max(daily_data, key=lambda x: x["points"])
+            min_row = min(daily_data, key=lambda x: x["points"])
+            response += (
+                f"   ⬆️ Макс: {max_row['points']:.1f} пунктов ({max_row['date']})\n"
+                f"   ⬇️ Мин: {min_row['points']:.1f} пунктов ({min_row['date']})\n"
+            )
+
     response += f"<b>{sp500_result['symbol']}</b> — {sp500_result['average_volatility_points']:.1f} пунктов, {sp500_result['average_volatility_percent']:.2f}%\n"
+
+    # S&P500: тоже ищем макс и мин
+    sp500_daily = sp500_result.get("daily_data", [])
+    if sp500_daily:
+        max_row = max(sp500_daily, key=lambda x: x["points"])
+        min_row = min(sp500_daily, key=lambda x: x["points"])
+        response += (
+            f"   ⬆️ Макс: {max_row['points']:.1f} пунктов ({max_row['date']})\n"
+            f"   ⬇️ Мин: {min_row['points']:.1f} пунктов ({min_row['date']})\n"
+        )
+
     response += "\n📌 Выберите период:\n/analyze_5  /analyze_10  /analyze_30  /analyze_90"
+
     await update.message.reply_text(response, parse_mode="HTML")
 
 # Генератор обработчиков
