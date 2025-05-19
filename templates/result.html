@@ -43,13 +43,23 @@
             <th>Пункты</th>
             <th>Изменение (%)</th>
           </tr>
+          {% set max_val = table|max(attribute='points') %}
+          {% set min_val = table|min(attribute='points') %}
           {% for row in table %}
-          <tr>
+          <tr
+            {% if row.points == max_val %}
+              style="background-color: #d4edda;"  <!-- зелёный -->
+            {% elif row.points == min_val %}
+              style="background-color: #f8d7da;"  <!-- розовый -->
+            {% else %}
+              style="background-color: #fffbe6;"  <!-- жёлтый -->
+            {% endif %}
+          >
             <td>{{ row.date }}</td>
             <td>{{ row.points }}</td>
             <td>{{ row.percent_change }}</td>
           </tr>
-          {% endfor %}
+          {% endfor %}        
         </table>
       </div>
     {% endfor %}
