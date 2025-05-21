@@ -56,38 +56,53 @@ def make_analyze_handler(d):
 scheduler = AsyncIOScheduler(timezone=pytz.timezone("Europe/Rome"))
 
 async def daily_volatility_alert():
+    print("🚀 Запуск daily_volatility_alert()")
     crypto_results, _ = run_volatility_analysis(90)
+
     rome_now = datetime.now(pytz.timezone("Europe/Rome"))
     yesterday = (rome_now - timedelta(days=1)).strftime("%Y-%m-%d")
+    print(f"🔎 Проверяем данные за дату: {yesterday}")
 
     message_lines = []
 
     for coin in crypto_results:
         symbol = coin["symbol"]
         data = coin.get("daily_data", [])
+        print(f"📘 Обрабатываем {symbol}, записей: {len(data)}")
+
         if not data:
+            print(f"⚠️ Нет данных по {symbol}")
             continue
 
         for row in data:
-            if row["date"] == yesterday:
-                percent = row["percent_change"]
-                if symbol == "BTCUSDT":
-                    if percent <= 2:
-                        message_lines.append("📉 BTCUSDT — минимальная волатильность ≤2%")
-                    elif percent >= 8:
-                        message_lines.append("📈 BTCUSDT — максимальная волатильность ≥8%")
-                elif symbol == "ETHUSDT":
-                    if percent <= 3:
-                        message_lines.append("📉 ETHUSDT — минимальная волатильность ≤3%")
-                    elif percent >= 15:
-                        message_lines.append("📈 ETHUSDT — максимальная волатильность ≥15%")
-                break
+            date = row["date"]
+            percent = row["percent_change"]
+            print(f"  📅 {date} — {percent:.2f}%")
+
+            if date != yesterday:
+                continue
+
+            # Проверка на минимумы и максимумы
+            if symbol == "BTCUSDT":
+                if percent <= 2:
+                    message_lines.append("📉 BTCUSDT — минимальная волатильность ≤2%")
+                elif percent >= 8:
+                    message_lines.append("📈 BTCUSDT — максимальная волатильность ≥8%")
+            elif symbol == "ETHUSDT":
+                if percent <= 3:
+                    message_lines.append("📉 ETHUSDT — минимальная волатильность ≤3%")
+                elif percent >= 15:
+                    message_lines.append("📈 ETHUSDT — максимальная волатильность ≥15%")
+            break  # Только одна проверка на дату
 
     if message_lines and TELEGRAM_CHAT_ID:
         header = "🚨 Обнаружена минимальная или максимальная волатильность!"
         advice = "💡 Рассмотрите покупку стредла при минимальной волатильности и продажу стренгла при максимальной."
         final_msg = f"<b>{header}</b>\n\n" + "\n".join(message_lines) + "\n\n" + advice
         await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=final_msg, parse_mode="HTML")
+        print("✅ Отправлено сообщение в Telegram")
+    else:
+        print("ℹ️ Нет волатильности, попадающей под заданные пороги.")
 
 # Веб-интерфейс
 @app.get("/", response_class=HTMLResponse)
@@ -132,6 +147,8 @@ async def start_bot():
 
     global bot
     bot = application.bot
+    
+    await daily_volatility_alert()
 
     await application.initialize()
     await application.start()
